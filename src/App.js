@@ -9,7 +9,10 @@ function App() {
   const [apiText, setApiText] = useState(''); // Estado para almacenar el texto devuelto por la API
   const [isLoading, setIsLoading] = useState(false); // Estado para controlar la visibilidad del loader/spinner
   const [isApiResponseReceived, setIsApiResponseReceived] = useState(false); // Estado para controlar si se ha recibido la respuesta de la API
+  const [isImagePending, setIsImagePending] = useState(false); // Estado para controlar si se ha recibido la respuesta de la API
+  
   const [capturedImageDataURL, setCapturedImageDataURL] = useState(''); // Estado para almacenar la imagen capturada en base64
+  const [imageUrl, setImageUrl] = useState(''); // Estado para almacenar la URL de la imagen devuelta por la API createImage
   const [urlParams, setUrlParams] = useState({}); // Estado para almacenar los parámetros de la URL
 
   const startCamera = async () => {
@@ -43,6 +46,7 @@ function App() {
       console.log('Captured Image:', imageDataURL);
       setCapturedImageDataURL(imageDataURL); // Almacena la imagen capturada en base64 en el estado
       setIsLoading(true); // Muestra el loader/spinner mientras se espera la respuesta de la API
+      setIsApiResponseReceived(true);
       fetchApiText(imageDataURL); // Llama a la función para obtener el texto de la API
     }
   };
@@ -84,8 +88,9 @@ function App() {
         });
 
         setApiText(botResponse);
+        //setIsApiResponseReceived(true);
+        setIsImagePending(true)
         setIsLoading(false);
-        setIsApiResponseReceived(true);
         callCreateImageAPI(imageDataURL); // Llama a la función para enviar la imagen a la API createImage
     })
     .catch(error => {
@@ -116,9 +121,14 @@ function App() {
             throw new Error('Network response was not ok');
         }
         // Procesar la respuesta si es necesario
+        const responseData = await response.json();
+        setImageUrl(responseData.URL); // Actualizar el estado con la URL de la imagen devuelta por la API
+        setIsImagePending(false)
+        setIsLoading(false); // Oculta el loader/spinner una vez que se ha recibido la respuesta de la API createImage
     })
     .catch(error => {
         console.error('Error calling createImage API:', error);
+        setIsLoading(false);
     });
   };
 
@@ -146,25 +156,33 @@ function App() {
           <button onClick={startCamera}>Start Camera</button>
         )}
         <button onClick={captureImage}>Capture Image</button>
-        {isApiResponseReceived && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
-              <div>
-                <img src={capturedImageDataURL} alt="Captured Image" />
-              </div>
-              <div>
-                <p dangerouslySetInnerHTML={{ __html: apiText }}></p>
-              </div>
-            </div>
-          </div>
-        )}
-        {isLoading && (
+        {isApiResponseReceived && isLoading && (
           <div className="modal">
             <div className="modal-content">
               <div className="loader"></div>
             </div>
           </div>
+        )}
+        {isApiResponseReceived && !isLoading && (
+          <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
+            {isImagePending ? (
+              <div>
+                
+                <p><span class="loader"></span>we are drawing something cool for you due to you hiring<span class="loader"></span></p>
+                <br></br>
+              </div>
+            ) : (
+              <div>
+                <img src={imageUrl} alt="Captured Image" width="500" height="500" />
+              </div>
+            )}
+            <div>
+              <p dangerouslySetInnerHTML={{ __html: apiText }}></p>
+            </div>
+          </div>
+        </div>
         )}
       </header>
     </div>
