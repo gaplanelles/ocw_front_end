@@ -56,6 +56,21 @@ function App() {
     const { requisitions, firstname, lastname, email } = urlParams;
     const url = `http://193.123.89.195/generateText?requisitions=${requisitions}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
     fetch(url, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  })
+  // TEST BEGIN
+  .then(async response => {
+    console.log(response)
+  })
+  .catch(error => {
+      console.error('Error fetching API:', error);
+      setIsLoading(false);
+  });
+  // TEST END
+    fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
