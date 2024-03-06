@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import backgroundImage from './background.png'; // Importa la imagen de fondo local
 
@@ -15,6 +15,7 @@ function App() {
   const [imageUrl, setImageUrl] = useState(''); // Estado para almacenar la URL de la imagen devuelta por la API createImage
   const [urlParams, setUrlParams] = useState({}); // Estado para almacenar los parámetros de la URL
 
+  console.log(capturedImageDataURL)
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
