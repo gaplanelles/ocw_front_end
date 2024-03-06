@@ -43,8 +43,8 @@ function App() {
       canvas.height = videoRef.current.videoHeight;
       const context = canvas.getContext('2d');
       context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const imageDataURL = canvas.toDataURL('image/png');
-      console.log('Captured Image:', imageDataURL);
+      const imageDataURL = canvas.toDataURL('image/png').split(',')[1];
+      console.log('Captured Image:', imageDataURL)
       setCapturedImageDataURL(imageDataURL); // Almacena la imagen capturada en base64 en el estado
       setIsLoading(true); // Muestra el loader/spinner mientras se espera la respuesta de la API
       setIsApiResponseReceived(true);
