@@ -55,13 +55,15 @@ function App() {
   const fetchApiText = (imageDataURL) => {
     const { requisitions, firstname, lastname, email } = urlParams;
     const url = `http://193.123.89.195/generateText?requisitions=${requisitions}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-  })
+  
   // TEST BEGIN
+    fetch("https://130.61.48.101:9007/reports/geojson?id=233", {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+})
+  
   .then(async response => {
     console.log(response)
   })
