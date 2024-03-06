@@ -176,7 +176,7 @@ function App() {
               </div>
             ) : (
               <div>
-                <img src={imageUrl} alt="Captured Image" width="500" height="500" />
+                <img src={imageUrl} alt="Captured" width="500" height="500" />
               </div>
             )}
             <div>
