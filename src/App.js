@@ -1,11 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react';
+import racingLogo from './racing_logo.svg';
+import strip from './strip_img.png'
 //import logo from './logo.svg';
 import './App.css';
-import backgroundImage from './background.png'; // Importa la imagen de fondo local
+//import backgroundImage from './background.png'; // Importa la imagen de fondo local
+import backgroundDesign from './background_design.png'; // Importa la imagen de fondo local
+import AvatarImg from './Avatar4a.png'
 
 function App() {
   const videoRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false); // Estado para controlar si la cámara está encendida o apagada
+  const [showImage, setShowImage] = useState(true);
   const [apiText, setApiText] = useState(''); // Estado para almacenar el texto devuelto por la API
   const [isLoading, setIsLoading] = useState(false); // Estado para controlar la visibilidad del loader/spinner
   const [isApiResponseReceived, setIsApiResponseReceived] = useState(false); // Estado para controlar si se ha recibido la respuesta de la API
@@ -21,6 +26,7 @@ function App() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        setShowImage(false)
         setIsCameraOn(true); // Actualiza el estado de la cámara
       }
     } catch (err) {
@@ -32,6 +38,7 @@ function App() {
     if (videoRef.current && videoRef.current.srcObject) {
       const tracks = videoRef.current.srcObject.getTracks();
       tracks.forEach(track => track.stop());
+      setShowImage(true);
       setIsCameraOn(false); // Actualiza el estado de la cámara
     }
   };
@@ -149,43 +156,60 @@ function App() {
   }, []);
 
   return (
-    <div className="App" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className="App" style={{ backgroundImage: `url(${backgroundDesign})` }}>
       <header className="App-header">
-        <video ref={videoRef} width="320" height="240" autoPlay style={{ display: 'block' }}></video>
-        {isCameraOn ? (
-          <button onClick={stopCamera}>Stop Camera</button>
-        ) : (
-          <button onClick={startCamera}>Start Camera</button>
-        )}
-        <button onClick={captureImage}>Capture Image</button>
-        {isApiResponseReceived && isLoading && (
-          <div className="modal">
-            <div className="modal-content">
-              <div className="loader"></div>
-            </div>
-          </div>
-        )}
-        {isApiResponseReceived && !isLoading && (
-          <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
-            {isImagePending ? (
-              <div>
-                
-                <p><span class="loader"></span>we are drawing something cool for you due to you hiring<span class="loader"></span></p>
-                <br></br>
-              </div>
-            ) : (
-              <div>
-                <img src={imageUrl} alt="Captured" width="500" height="500" />
-              </div>
-            )}
-            <div>
-              <p dangerouslySetInnerHTML={{ __html: apiText }}></p>
-            </div>
-          </div>
+        <div className="top-strip strip-container">
+          <img src={strip} alt="Imagen Superior" className="strip-image" />
         </div>
-        )}
+        <div className="top-container">
+          <img src={racingLogo} alt="Racing Logo" />
+        </div>
+        
+        <div className="bottom-container">
+        <div className="video-container" style={{ border: '10px solid black', borderRadius: '10px', overflow: 'hidden', position:'relative' }}>
+          <video ref={videoRef} width="320" height="240" autoPlay style={{ display: 'block' }}></video>
+          {showImage && <img src={AvatarImg} alt="Avatar" className="superpuesta" />}
+        </div>
+        <p className="text-between-video-and-buttons">Tip: For best results, face the camera straight on and smile!</p>
+          <div className="buttons-container">
+            {isCameraOn ? (
+              <button onClick={stopCamera} className="stop-camera">Stop Camera</button>
+            ) : (
+              <button onClick={startCamera} className="start-camera">Start Camera</button>
+            )}
+            <button onClick={captureImage} className="capture-image">Capture Image</button>
+          </div>
+          {isApiResponseReceived && isLoading && (
+            <div className="modal modal-background">
+              <div className="modal-content">
+                <div className="loader"></div>
+              </div>
+            </div>
+          )}
+          {isApiResponseReceived && !isLoading && (
+            <div className="modal modal-background">
+              <div className="modal-content">
+                <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
+                {isImagePending ? (
+                  <div>
+                    <p><span className="loader"></span>we are drawing something cool for you due to you hiring<span className="loader"></span></p>
+                    <br></br>
+                  </div>
+                ) : (
+                  <div>
+                    <img src={imageUrl} alt="Captured" className="strip-image" />
+                  </div>
+                )}
+                <div>
+                  <p dangerouslySetInnerHTML={{ __html: apiText }}></p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="bottom-strip strip-container">
+          <img src={strip} alt="Imagen Inferior" className="strip-image" />
+        </div>
       </header>
     </div>
   );

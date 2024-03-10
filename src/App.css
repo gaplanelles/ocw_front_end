@@ -43,7 +43,8 @@
 }
 
 .modal-content {
-  background-color: #fefefe; /* Fondo blanco */
+  background-image: url('./background.png');
+  background-size: cover;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -107,6 +108,114 @@
   border-color: #FFF #FFF transparent transparent;
   animation: rotation 1.5s linear infinite;
 }
+.top-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+
+.bottom-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 50%;
+  padding-top: 20px; /* Ajusta el espacio entre el video y los botones */
+}
+.video-container {
+  margin-top: 50px; /* Esto ajusta el espacio entre el logo y el video */
+}
+
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Espacio entre los botones y otros elementos */
+  margin-top: 20px; /* Espacio entre los botones y el video */
+}
+
+.buttons-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-right: 10px; /* Espacio entre los botones */
+}
+
+/* Estilo adicional para el botón de "Stop Camera" */
+.buttons-container button:first-child {
+  margin-right: 10px; /* Espacio entre el botón "Start Camera" y el botón "Capture Image" */
+}
+
+.buttons-container button:last-child {
+  margin-right: 0; /* Eliminar el margen derecho del último botón */
+}
+
+.buttons-container button.start-camera,
+.buttons-container button.stop-camera {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-right: 10px; /* Espacio entre los botones */
+  background-color: #7d9393; /* Color de fondo */
+  color: white; /* Color del texto */
+  border-radius: 8px; /* Bordes redondeados */
+  border: 4px solid #7d9393;
+}
+.buttons-container button.capture-image {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-right: 10px; /* Espacio entre los botones */
+  background-color: #a24d29; /* Color de fondo */
+  color: white; /* Color del texto */
+  border-radius: 8px; /* Bordes redondeados */
+  border: 4px solid #a24d29;
+}
+
+.text-between-video-and-buttons {
+  color: #888; /* Color de texto gris */
+  margin-top: 10px; /* Espacio entre el video y el texto */
+  margin-bottom: 1px; /* Espacio entre el texto y los botones */
+  font-size: 12px; /* Tamaño de fuente */
+}
+
+
+
+.strip-container {
+  position: fixed;
+  width: 100%;
+}
+.top-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 1; /* Para asegurarse de que la imagen superior esté encima de otros elementos */
+}
+
+.bottom-strip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 1; /* Para asegurarse de que la imagen inferior esté encima de otros elementos */
+}
+.top-strip img,
+.bottom-strip img {
+  width: 100%;
+  height: 20px; /* ajusta el valor según sea necesario */
+  vertical-align: top; /* Alinea la imagen en la parte superior del contenedor */
+}
+
+.superpuesta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 240px;
+  z-index: 1; /* Asegúrate de que esté encima del video de fondo */
+}
+
     
 @keyframes rotation {
   0% {
