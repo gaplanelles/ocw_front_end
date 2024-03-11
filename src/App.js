@@ -167,7 +167,7 @@ function App() {
         
         <div className="bottom-container">
         <div className="video-container" style={{ border: '10px solid black', borderRadius: '10px', overflow: 'hidden', position:'relative' }}>
-          <video ref={videoRef} width="320" height="240" autoPlay style={{ display: 'block' }}></video>
+          <video ref={videoRef} width="240" height="320" autoPlay style={{ display: 'block' }}></video>
           {showImage && <img src={AvatarImg} alt="Avatar" className="superpuesta" />}
         </div>
         <p className="text-between-video-and-buttons">Tip: For best results, face the camera straight on and smile!</p>
