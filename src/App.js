@@ -60,8 +60,8 @@ function App() {
   };
 
   const fetchApiText = (imageDataURL) => {
-    const { requisitions, firstname, lastname, email } = urlParams;
-    const url = `https://193.123.68.104:5001/generateText?requisitions=${requisitions}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
+    const { StateName, firstname, lastname, email } = urlParams;
+    const url = `https://193.123.68.104:5001/generateText?StateName=${StateName}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
   
     fetch(url, {
         method: 'GET',
@@ -109,13 +109,13 @@ function App() {
   };
 
   const callCreateImageAPI = (imageDataURL) => {
-    const { requisitions } = urlParams;
+    const { StateName } = urlParams;
     const url = `https://193.123.68.104:5000/createImage`;
 
     // Construir el cuerpo de la solicitud
     const requestBody = {
         image: imageDataURL,
-        requisitions: requisitions
+        StateName: StateName
     };
 
     fetch(url, {

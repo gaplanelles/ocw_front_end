@@ -142,7 +142,7 @@
 .loader::before {
   width: 32px;
   height: 32px;
-  border-color: #FFF #FFF transparent transparent;
+  border-color: #000000 #000000 transparent transparent;
   animation: rotation 1.5s linear infinite;
 }
 .top-container {
