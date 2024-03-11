@@ -180,8 +180,8 @@ function App() {
             <button onClick={captureImage} className="capture-image">Capture Image</button>
           </div>
           {isApiResponseReceived && isLoading && (
-            <div className="modal modal-background">
-              <div className="modal-content">
+            <div className="modal-small modal-background">
+              <div className="modalsmall-content">
                 <div className="loader"></div>
               </div>
             </div>
@@ -190,21 +190,30 @@ function App() {
             <div className="modal modal-background">
               <div className="modal-content">
                 <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
+                <img src={racingLogo} alt="Icono" className="centered-image" />
+                <h2 className='press-release-title' style={{ color: "black" }}>Press Release</h2>
+
+
                 {isImagePending ? (
                   <div>
-                    <p><span className="loader"></span>we are drawing something cool for you due to you hiring<span className="loader"></span></p>
-                    <br></br>
+                    <span className="loader"></span>
+                    <h3 className="text-between-video-and-buttons" style={{ color: "#888", marginTop: "10px", marginBottom: "10px", fontSize: "12px" }}>
+                       We are drawing something cool for you.
+                    </h3>
+
                   </div>
                 ) : (
                   <div>
-                    <img src={imageUrl} alt="Captured" className="strip-image" />
+                    <img src={imageUrl} alt="Captured" style={{ width: "400px", height: "400px", marginTop: "0px" }} />
                   </div>
                 )}
                 <div>
-                  <p dangerouslySetInnerHTML={{ __html: apiText }}></p>
+                  <p dangerouslySetInnerHTML={{ __html: apiText }} style={{ textAlign: "justify", margin: "0 20px" }}></p>
                 </div>
               </div>
             </div>
+
+
           )}
         </div>
         <div className="bottom-strip strip-container">
