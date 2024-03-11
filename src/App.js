@@ -80,6 +80,7 @@ function App() {
         var jsonObjects = [];
         var start = 0;
         for (var i = 0; i < data.length; i++) {
+            console.log(data)
             if (data[i] === '{') {
                 start = i;
             } else if (data[i] === '}') {
@@ -94,6 +95,7 @@ function App() {
                 data.response = "<br>";
             }
             botResponse = botResponse + data.response;
+            console.log(botResponse)
         });
 
         setApiText(botResponse);
@@ -155,6 +157,11 @@ function App() {
     getUrlParams();
   }, []);
 
+  const handleCloseModal = () => {
+    setIsApiResponseReceived(false);
+    window.location.reload();
+  }
+
   return (
     <div className="App" style={{ backgroundImage: `url(${backgroundDesign})` }}>
       <header className="App-header">
@@ -189,7 +196,7 @@ function App() {
           {isApiResponseReceived && !isLoading && (
             <div className="modal modal-background">
               <div className="modal-content">
-                <span className="close" onClick={() => setIsApiResponseReceived(false)}>×</span>
+                <span className="close" onClick={() => handleCloseModal()}>×</span>
                 <img src={racingLogo} alt="Icono" className="centered-image" />
                 <h2 className='press-release-title' style={{ color: "black" }}>Press Release</h2>
 

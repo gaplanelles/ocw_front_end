@@ -248,7 +248,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 240px;
+  width: 242px;
   height: 320px;
   z-index: 1; /* Asegúrate de que esté encima del video de fondo */
 }
