@@ -14,7 +14,6 @@
 }
 
 .App-header {
-
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -39,6 +38,7 @@
 .press-release-title {
   color: black;
 }
+
 .modal {
   display: flex;
   position: fixed;
@@ -65,6 +65,7 @@
   max-height: 100%; /* Asegura que el contenido no sea más alto que el modal */
   overflow: auto;
 }
+
 .modal-small {
   display: flex;
   position: fixed;
@@ -145,6 +146,7 @@
   border-color: #000000 #000000 transparent transparent;
   animation: rotation 1.5s linear infinite;
 }
+
 .top-container {
   display: flex;
   justify-content: center;
@@ -160,10 +162,10 @@
   height: 50%;
   padding-top: 20px; /* Ajusta el espacio entre el video y los botones */
 }
+
 .video-container {
   margin-top: 50px; /* Esto ajusta el espacio entre el logo y el video */
 }
-
 
 .buttons-container {
   display: flex;
@@ -197,6 +199,7 @@
   border-radius: 8px; /* Bordes redondeados */
   border: 4px solid #7d9393;
 }
+
 .buttons-container button.capture-image {
   padding: 10px 20px;
   font-size: 16px;
@@ -214,12 +217,11 @@
   font-size: 12px; /* Tamaño de fuente */
 }
 
-
-
 .strip-container {
   position: fixed;
   width: 100%;
 }
+
 .top-strip {
   position: absolute;
   top: 0;
@@ -237,6 +239,7 @@
   height: 20px;
   z-index: 1; /* Para asegurarse de que la imagen inferior esté encima de otros elementos */
 }
+
 .top-strip img,
 .bottom-strip img {
   width: 100%;
@@ -253,7 +256,6 @@
   z-index: 1; /* Asegúrate de que esté encima del video de fondo */
 }
 
-
 .icon-image {
   position: absolute;
   top: 0;
@@ -263,8 +265,45 @@
   margin: 10px; /* ajusta el margen según lo necesites */
 }
 
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px; /* Ajusta el margen superior */
+  margin-bottom: 20px; /* Ajusta el margen inferior */
+}
 
-    
+.form-container select,
+.form-container input {
+  width: 80%; /* Ancho de los elementos del formulario */
+  padding: 10px;
+  margin: 10px 0; /* Espacio entre los elementos del formulario */
+  font-size: 16px; /* Tamaño de la fuente */
+  border: 2px solid #ccc; /* Borde de los elementos del formulario */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"] {
+  background-color: #fff; /* Color de fondo de los campos de texto */
+}
+
+.form-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50; /* Color de fondo del botón */
+  color: white; /* Color del texto del botón */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  margin-top: 10px; /* Margen superior del botón */
+}
+
+.form-container button:hover {
+  background-color: #45a049; /* Color de fondo del botón al pasar el ratón */
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -272,7 +311,8 @@
   100% {
     transform: rotate(360deg);
   }
-} 
+}
+
 @keyframes rotationBack {
   0% {
     transform: rotate(0deg);
@@ -281,8 +321,6 @@
     transform: rotate(-360deg);
   }
 }
-    
-
 
 @keyframes App-logo-spin {
   from {

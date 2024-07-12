@@ -1,33 +1,34 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import racingLogo from './racing_logo.svg';
-import strip from './strip_img.png'
-//import logo from './logo.svg';
+import strip from './strip_img.png';
 import './App.css';
-//import backgroundImage from './background.png'; // Importa la imagen de fondo local
-import backgroundDesign from './background_design.png'; // Importa la imagen de fondo local
-import AvatarImg from './Avatar4a.png'
+import backgroundDesign from './background_design.png';
+import AvatarImg from './Avatar4a.png';
 
 function App() {
   const videoRef = useRef(null);
-  const [isCameraOn, setIsCameraOn] = useState(false); // Estado para controlar si la cámara está encendida o apagada
+  const [isCameraOn, setIsCameraOn] = useState(false);
   const [showImage, setShowImage] = useState(true);
-  const [apiText, setApiText] = useState(''); // Estado para almacenar el texto devuelto por la API
-  const [isLoading, setIsLoading] = useState(false); // Estado para controlar la visibilidad del loader/spinner
-  const [isApiResponseReceived, setIsApiResponseReceived] = useState(false); // Estado para controlar si se ha recibido la respuesta de la API
-  const [isImagePending, setIsImagePending] = useState(false); // Estado para controlar si se ha recibido la respuesta de la API
-  
-  const [capturedImageDataURL, setCapturedImageDataURL] = useState(''); // Estado para almacenar la imagen capturada en base64
-  const [imageUrl, setImageUrl] = useState(''); // Estado para almacenar la URL de la imagen devuelta por la API createImage
-  const [urlParams, setUrlParams] = useState({}); // Estado para almacenar los parámetros de la URL
+  const [apiText, setApiText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isApiResponseReceived, setIsApiResponseReceived] = useState(false);
+  const [isImagePending, setIsImagePending] = useState(false);
+  const [capturedImageDataURL, setCapturedImageDataURL] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [stateName, setStateName] = useState('F1 Pilot');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
 
-  console.log(capturedImageDataURL)
+  console.log(capturedImageDataURL);
+
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        setShowImage(false)
-        setIsCameraOn(true); // Actualiza el estado de la cámara
+        setShowImage(false);
+        setIsCameraOn(true);
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
@@ -39,7 +40,7 @@ function App() {
       const tracks = videoRef.current.srcObject.getTracks();
       tracks.forEach(track => track.stop());
       setShowImage(true);
-      setIsCameraOn(false); // Actualiza el estado de la cámara
+      setIsCameraOn(false);
     }
   };
 
@@ -51,111 +52,91 @@ function App() {
       const context = canvas.getContext('2d');
       context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
       const imageDataURL = canvas.toDataURL('image/png').split(',')[1];
-      console.log('Captured Image:', imageDataURL)
-      setCapturedImageDataURL(imageDataURL); // Almacena la imagen capturada en base64 en el estado
-      setIsLoading(true); // Muestra el loader/spinner mientras se espera la respuesta de la API
+      console.log('Captured Image:', imageDataURL);
+      setCapturedImageDataURL(imageDataURL);
+      setIsLoading(true);
       setIsApiResponseReceived(true);
-      fetchApiText(imageDataURL); // Llama a la función para obtener el texto de la API
+      fetchApiText(imageDataURL);
     }
   };
 
   const fetchApiText = (imageDataURL) => {
-    const { StateName, firstname, lastname, email } = urlParams;
-    const url = `https://193.123.68.104:5001/generateText?StateName=${StateName}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
-  
+    const url = `https://193.123.68.104:5001/generateText?StateName=${stateName}&firstname=${firstname}&lastname=${lastname}&email=${email}`;
+
     fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
     .then(async response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      let botResponse = '';
+      let data = await response.text();
+
+      var jsonObjects = [];
+      var start = 0;
+      for (var i = 0; i < data.length; i++) {
+        console.log(data);
+        if (data[i] === '{') {
+          start = i;
+        } else if (data[i] === '}') {
+          var jsonObject = data.substring(start, i + 1);
+          jsonObjects.push(JSON.parse(jsonObject));
         }
-        let botResponse = '';
+      }
 
-        let data = await response.text();
-
-        var jsonObjects = [];
-        var start = 0;
-        for (var i = 0; i < data.length; i++) {
-            console.log(data)
-            if (data[i] === '{') {
-                start = i;
-            } else if (data[i] === '}') {
-                var jsonObject = data.substring(start, i + 1);
-                jsonObjects.push(JSON.parse(jsonObject));
-            }
+      jsonObjects.forEach(obj => {
+        const data = obj;
+        if (data.response === "\n") {
+          data.response = "<br>";
         }
+        botResponse = botResponse + data.response;
+        console.log(botResponse);
+      });
 
-        jsonObjects.forEach(obj => {
-            const data = obj;
-            if (data.response === "\n") {
-                data.response = "<br>";
-            }
-            botResponse = botResponse + data.response;
-            console.log(botResponse)
-        });
-
-        setApiText(botResponse);
-        //setIsApiResponseReceived(true);
-        setIsImagePending(true)
-        setIsLoading(false);
-        callCreateImageAPI(imageDataURL); // Llama a la función para enviar la imagen a la API createImage
+      setApiText(botResponse);
+      setIsImagePending(true);
+      setIsLoading(false);
+      callCreateImageAPI(imageDataURL);
     })
     .catch(error => {
-        console.error('Error fetching API:', error);
-        setIsLoading(false);
+      console.error('Error fetching API:', error);
+      setIsLoading(false);
     });
   };
 
   const callCreateImageAPI = (imageDataURL) => {
-    const { StateName } = urlParams;
     const url = `https://193.123.68.104:5000/createImage`;
 
-    // Construir el cuerpo de la solicitud
     const requestBody = {
-        image: imageDataURL,
-        StateName: StateName
+      image: imageDataURL,
+      StateName: stateName
     };
 
     fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody) // Convertir el objeto a JSON y enviarlo en el cuerpo de la solicitud
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
     })
     .then(async response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        // Procesar la respuesta si es necesario
-        const responseData = await response.json();
-        setImageUrl(responseData.URL); // Actualizar el estado con la URL de la imagen devuelta por la API
-        setIsImagePending(false)
-        setIsLoading(false); // Oculta el loader/spinner una vez que se ha recibido la respuesta de la API createImage
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      setImageUrl(responseData.URL);
+      setIsImagePending(false);
+      setIsLoading(false);
     })
     .catch(error => {
-        console.error('Error calling createImage API:', error);
-        setIsLoading(false);
+      console.error('Error calling createImage API:', error);
+      setIsLoading(false);
     });
   };
-
-  const getUrlParams = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const params = {};
-    for (let param of searchParams.entries()) {
-      params[param[0]] = param[1];
-    }
-    setUrlParams(params);
-    console.log('URL Params:', params);
-  };
-
-  useEffect(() => {
-    getUrlParams();
-  }, []);
 
   const handleCloseModal = () => {
     setIsApiResponseReceived(false);
@@ -171,13 +152,24 @@ function App() {
         <div className="top-container">
           <img src={racingLogo} alt="Racing Logo" />
         </div>
-        
+
         <div className="bottom-container">
-        <div className="video-container" style={{ border: '10px solid black', borderRadius: '10px', overflow: 'hidden', position:'relative' }}>
-          <video ref={videoRef} width="240" height="320" autoPlay style={{ display: 'block' }}></video>
-          {showImage && <img src={AvatarImg} alt="Avatar" className="superpuesta" />}
-        </div>
-        <p className="text-between-video-and-buttons">Tip: For best results, face the camera straight on and smile!</p>
+          <div className="video-container" style={{ border: '10px solid black', borderRadius: '10px', overflow: 'hidden', position:'relative' }}>
+            <video ref={videoRef} width="240" height="320" autoPlay style={{ display: 'block' }}></video>
+            {showImage && <img src={AvatarImg} alt="Avatar" className="superpuesta" />}
+          </div>
+          <p className="text-between-video-and-buttons">Tip: For best results, face the camera straight on and smile!</p>
+
+          <div className="form-container">
+            <select value={stateName} onChange={(e) => setStateName(e.target.value)}>
+              <option value="F1Driver">F1 Driver</option>
+              <option value="PitCrew">Pit Crew</option>
+            </select>
+            <input type="text" placeholder="First Name" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
+            <input type="text" placeholder="Last Name" value={lastname} onChange={(e) => setLastname(e.target.value)} />
+            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+
           <div className="buttons-container">
             {isCameraOn ? (
               <button onClick={stopCamera} className="stop-camera">Stop Camera</button>
@@ -200,14 +192,12 @@ function App() {
                 <img src={racingLogo} alt="Icono" className="centered-image" />
                 <h2 className='press-release-title' style={{ color: "black" }}>Press Release</h2>
 
-
                 {isImagePending ? (
                   <div>
                     <span className="loader"></span>
                     <h3 className="text-between-video-and-buttons" style={{ color: "#888", marginTop: "10px", marginBottom: "10px", fontSize: "12px" }}>
-                       We are drawing something cool for you.
+                      We are drawing something cool for you.
                     </h3>
-
                   </div>
                 ) : (
                   <div>
@@ -219,8 +209,6 @@ function App() {
                 </div>
               </div>
             </div>
-
-
           )}
         </div>
         <div className="bottom-strip strip-container">
